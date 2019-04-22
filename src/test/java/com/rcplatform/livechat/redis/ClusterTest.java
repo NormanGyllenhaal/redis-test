@@ -35,7 +35,7 @@ public class ClusterTest {
     private ThreadLocalRandom threadLocalRandom = ThreadLocalRandom.current();
 
 
-    private static final Integer SIZE = 20;
+    private static final Integer SIZE = 2000;
 
     private Logger logger = LoggerFactory.getLogger(ClusterTest.class);
 
@@ -66,9 +66,9 @@ public class ClusterTest {
 
     @Test
     public void clusterTest() {
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 16; i++) {
             ex.execute(() -> {
-                for (int j = 0; j < 10; j++) {
+                for (int j = 0; j < 1000000; j++) {
                     logger.info("当前 {}", j);
                     testRedis();
                 }
