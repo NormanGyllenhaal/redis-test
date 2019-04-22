@@ -110,7 +110,7 @@ public class ClusterTest {
                 //string
                 String strValue = RandomStringUtils.randomAlphabetic(100);
                 begin = System.currentTimeMillis();
-                connect.sync().setex(stringKey, TimeUnit.HOURS.toSeconds(1),strValue);
+                connect.sync().setex(stringKey, TimeUnit.MINUTES.toSeconds(10),strValue);
                 saveTime(begin, "set");
                 begin = System.currentTimeMillis();
                 connect.sync().get(stringKey);
@@ -128,7 +128,7 @@ public class ClusterTest {
                 connect.sync().hget(hashKey, field);
                 saveTime(begin, "hget");
             }
-            connect.sync().expire(hashKey, TimeUnit.HOURS.toSeconds(1));
+            connect.sync().expire(hashKey, TimeUnit.MINUTES.toSeconds(10));
             begin = System.currentTimeMillis();
             connect.sync().hgetall(hashKey);
             saveTime(begin, "hgetall");
@@ -140,7 +140,7 @@ public class ClusterTest {
                 connect.sync().lpush(listKey, listValue);
                 saveTime(begin, "lpush");
             }
-            connect.sync().expire(listKey, TimeUnit.HOURS.toSeconds(1));
+            connect.sync().expire(listKey, TimeUnit.MINUTES.toSeconds(10));
             begin = System.currentTimeMillis();
             connect.sync().lrange(listKey, 0, -1);
             saveTime(begin,"lrange");
@@ -152,7 +152,7 @@ public class ClusterTest {
                 connect.sync().sadd(setKey, s);
                 saveTime(begin,"sadd");
             }
-            connect.sync().expire(setKey, TimeUnit.HOURS.toSeconds(1));
+            connect.sync().expire(setKey, TimeUnit.MINUTES.toSeconds(10));
             begin = System.currentTimeMillis();
             connect.sync().smembers(setKey);
             saveTime(begin,"smembers");
@@ -164,7 +164,7 @@ public class ClusterTest {
                 connect.sync().zadd(zsetKey, (double) System.currentTimeMillis(),s);
                 saveTime(begin,"zadd");
             }
-            connect.sync().expire(zsetKey, TimeUnit.HOURS.toSeconds(1));
+            connect.sync().expire(zsetKey, TimeUnit.MINUTES.toSeconds(10));
             begin = System.currentTimeMillis();
             connect.sync().zrange(zsetKey, 0, -1);
             saveTime(begin,"zrange");
