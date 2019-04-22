@@ -2,4 +2,4 @@ spring:
   application:
     name: live-chat-redis-test
   profiles:
-    active: dev
+    active: prod
