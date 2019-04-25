@@ -26,10 +26,10 @@ public class ClusterTest {
     private StatefulRedisClusterConnection<String, String> connect;
 
 
-    private CountDownLatch countDownLatch = new CountDownLatch(8);
+    private CountDownLatch countDownLatch = new CountDownLatch(4);
 
 
-    private ExecutorService ex = Executors.newFixedThreadPool(8);
+    private ExecutorService ex = Executors.newFixedThreadPool(4);
 
 
     private ThreadLocalRandom threadLocalRandom = ThreadLocalRandom.current();
@@ -66,7 +66,7 @@ public class ClusterTest {
 
     @Test
     public void clusterTest() {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 4; i++) {
             ex.execute(() -> {
                 try {
                     for (int j = 0; j < 100000000; j++) {
