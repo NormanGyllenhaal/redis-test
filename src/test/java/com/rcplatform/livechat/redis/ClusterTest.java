@@ -68,7 +68,7 @@ public class ClusterTest {
     public void clusterTest() {
         for (int i = 0; i < 8; i++) {
             ex.execute(() -> {
-                for (int j = 0; j < 1; j++) {
+                for (int j = 0; j < 100000000; j++) {
                     logger.info("当前 {}", j);
                     testRedis();
                 }
