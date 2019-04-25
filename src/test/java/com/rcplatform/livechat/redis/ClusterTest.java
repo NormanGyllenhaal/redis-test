@@ -26,10 +26,10 @@ public class ClusterTest {
     private StatefulRedisClusterConnection<String, String> connect;
 
 
-    private CountDownLatch countDownLatch = new CountDownLatch(10);
+    private CountDownLatch countDownLatch = new CountDownLatch(8);
 
 
-    private ExecutorService ex = Executors.newFixedThreadPool(10);
+    private ExecutorService ex = Executors.newFixedThreadPool(8);
 
 
     private ThreadLocalRandom threadLocalRandom = ThreadLocalRandom.current();
@@ -66,12 +66,13 @@ public class ClusterTest {
 
     @Test
     public void clusterTest() {
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 8; i++) {
             ex.execute(() -> {
-                for (int j = 0; j < 1000000; j++) {
+                for (int j = 0; j < 1; j++) {
                     logger.info("当前 {}", j);
                     testRedis();
                 }
+                logger.info("线程 {} 执行完成",Thread.currentThread().getName());
                 countDownLatch.countDown();
             });
         }
@@ -133,9 +134,9 @@ public class ClusterTest {
             connect.sync().hgetall(hashKey);
             saveTime(begin, "hgetall");
             //list
-            String listKey = RandomStringUtils.random(8);
+            String listKey = RandomStringUtils.randomAlphabetic(8);
             for (int i = 0; i < SIZE; i++) {
-                String listValue = RandomStringUtils.random(5);
+                String listValue = RandomStringUtils.randomAlphabetic(5);
                 begin = System.currentTimeMillis();
                 connect.sync().lpush(listKey, listValue);
                 saveTime(begin, "lpush");
@@ -145,7 +146,7 @@ public class ClusterTest {
             connect.sync().lrange(listKey, 0, -1);
             saveTime(begin,"lrange");
             //set
-            String setKey = RandomStringUtils.random(6);
+            String setKey = RandomStringUtils.randomAlphabetic(6);
             for (int i = 0; i < SIZE; i++) {
                 String s = String.valueOf(threadLocalRandom.nextInt());
                 begin = System.currentTimeMillis();
@@ -157,7 +158,7 @@ public class ClusterTest {
             connect.sync().smembers(setKey);
             saveTime(begin,"smembers");
             //zset
-            String zsetKey = RandomStringUtils.random(7);
+            String zsetKey = RandomStringUtils.randomAlphabetic(7);
             for (int i = 0; i < SIZE; i++) {
                 String s = String.valueOf(threadLocalRandom.nextInt());
                 begin = System.currentTimeMillis();
