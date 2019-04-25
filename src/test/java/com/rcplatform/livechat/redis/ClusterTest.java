@@ -68,18 +68,22 @@ public class ClusterTest {
     public void clusterTest() {
         for (int i = 0; i < 8; i++) {
             ex.execute(() -> {
-                for (int j = 0; j < 100000000; j++) {
-                    logger.info("当前 {}", j);
-                    testRedis();
+                try {
+                    for (int j = 0; j < 100000000; j++) {
+                        logger.info("当前 {}", j);
+                        testRedis();
+                    }
+                } catch (Exception e) {
+                    logger.error("异常 {}", e);
                 }
-                logger.info("线程 {} 执行完成",Thread.currentThread().getName());
+                logger.info("线程 {} 执行完成", Thread.currentThread().getName());
                 countDownLatch.countDown();
             });
         }
         try {
             countDownLatch.await();
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            logger.error("异常", e);
         }
         printResult();
     }
@@ -111,7 +115,7 @@ public class ClusterTest {
                 //string
                 String strValue = RandomStringUtils.randomAlphabetic(100);
                 begin = System.currentTimeMillis();
-                connect.sync().setex(stringKey, TimeUnit.MINUTES.toSeconds(10),strValue);
+                connect.sync().setex(stringKey, TimeUnit.MINUTES.toSeconds(10), strValue);
                 saveTime(begin, "set");
                 begin = System.currentTimeMillis();
                 connect.sync().get(stringKey);
@@ -123,7 +127,7 @@ public class ClusterTest {
                 String field = RandomStringUtils.randomAlphabetic(5);
                 String value = String.valueOf(threadLocalRandom.nextInt());
                 begin = System.currentTimeMillis();
-                connect.sync().hset(hashKey, field,value);
+                connect.sync().hset(hashKey, field, value);
                 saveTime(begin, "hset");
                 begin = System.currentTimeMillis();
                 connect.sync().hget(hashKey, field);
@@ -144,31 +148,31 @@ public class ClusterTest {
             connect.sync().expire(listKey, TimeUnit.MINUTES.toSeconds(10));
             begin = System.currentTimeMillis();
             connect.sync().lrange(listKey, 0, -1);
-            saveTime(begin,"lrange");
+            saveTime(begin, "lrange");
             //set
             String setKey = RandomStringUtils.randomAlphabetic(6);
             for (int i = 0; i < SIZE; i++) {
                 String s = String.valueOf(threadLocalRandom.nextInt());
                 begin = System.currentTimeMillis();
                 connect.sync().sadd(setKey, s);
-                saveTime(begin,"sadd");
+                saveTime(begin, "sadd");
             }
             connect.sync().expire(setKey, TimeUnit.MINUTES.toSeconds(10));
             begin = System.currentTimeMillis();
             connect.sync().smembers(setKey);
-            saveTime(begin,"smembers");
+            saveTime(begin, "smembers");
             //zset
             String zsetKey = RandomStringUtils.randomAlphabetic(7);
             for (int i = 0; i < SIZE; i++) {
                 String s = String.valueOf(threadLocalRandom.nextInt());
                 begin = System.currentTimeMillis();
-                connect.sync().zadd(zsetKey, (double) System.currentTimeMillis(),s);
-                saveTime(begin,"zadd");
+                connect.sync().zadd(zsetKey, (double) System.currentTimeMillis(), s);
+                saveTime(begin, "zadd");
             }
             connect.sync().expire(zsetKey, TimeUnit.MINUTES.toSeconds(10));
             begin = System.currentTimeMillis();
             connect.sync().zrange(zsetKey, 0, -1);
-            saveTime(begin,"zrange");
+            saveTime(begin, "zrange");
         } catch (Exception e) {
             e.printStackTrace();
         }
