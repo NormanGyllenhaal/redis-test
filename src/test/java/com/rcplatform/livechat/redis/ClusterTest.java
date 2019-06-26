@@ -66,7 +66,7 @@ public class ClusterTest {
 
     @Test
     public void clusterTest() {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 8; i++) {
             ex.execute(() -> {
                 try {
                     for (int j = 0; j < 100000000; j++) {
